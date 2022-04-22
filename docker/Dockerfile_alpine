@@ -1,0 +1,40 @@
+##
+# adapted from
+# osgeo/gdal:alpine-normal
+
+ARG FUNCTION_DIR="/function"
+FROM osgeo/gdal:alpine-normal-latest as build-image
+
+# For Lambda
+# Include global arg in this stage of the build
+ARG FUNCTION_DIR
+
+# Install aws-lambda-cpp build dependencies
+RUN apk add --no-cache \
+  g++ \
+  make \
+  cmake \
+  unzip \
+  curl-dev
+# Copy function code
+RUN mkdir -p ${FUNCTION_DIR}
+
+
+# COPY app/* ${FUNCTION_DIR}
+
+
+RUN apk add --no-cache python3=~3.8  py3-pip 
+RUN python3 -m pip install --target ${FUNCTION_DIR} awslambdaric
+
+
+FROM osgeo/gdal:alpine-normal-latest
+
+ARG FUNCTION_DIR
+
+WORKDIR ${FUNCTION_DIR}
+
+COPY --from=build-image ${FUNCTION_DIR} ${FUNCTION_DIR}
+
+ENTRYPOINT [ "python3", "-m", "awslambdaric" ]
+
+CMD [ "app.handler" ]
