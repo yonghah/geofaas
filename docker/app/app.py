@@ -10,7 +10,7 @@ from subprocess import run, PIPE, call
 def handler(event, context):
     
     cmd = run(
-        ['bash', 'ls'],
+        ['ogr2ogr'],
         stdout=PIPE, stderr=PIPE, universal_newlines=True)
     print("Error:: ", cmd.stderr)
     print("Out:: ", cmd.stdout)

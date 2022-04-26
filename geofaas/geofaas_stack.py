@@ -18,7 +18,11 @@ class GeofaasStack(Stack):
         
         hello_lambda = _lambda.DockerImageFunction(
             self, "ECRFunction",
-            code=_lambda.DockerImageCode.from_ecr(repo), 
+            code=_lambda.DockerImageCode.from_ecr(
+                repo,
+                # entrypoint=['/usr/bin/python3 -m awslambdaric'],
+                cmd=['hello.handler']
+            ), 
             architecture=_lambda.Architecture.ARM_64,  #type: ignore
             timeout=Duration.seconds(900),
             memory_size=256

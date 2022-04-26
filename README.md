@@ -1,7 +1,30 @@
+# Point Label
 
-# Welcome to your CDK Python project!
+This project creates a lambda function that generates vector tiles of 
+the point features with room attributes. This vector tiles will be used
+to display room labels to workaround tile boundary issues. 
 
-This is a blank project for Python development with CDK.
+The process is:
+
+* from room polygon in RDS -> room points (gpkg, ogr2ogr)
+* room points -> vector tiles (pbf, ogr2ogr)
+* copy the vector tiles to S3 (aws cli or boto)
+
+Alternatively,
+
+* add a secondary geometry column to room polygon table in RDS
+  * this will give a good report for converstion status
+* convert room points -> vector tiles
+* copy the vector tiles to S3
+
+
+### for testing
+
+* room polygon -> room points 
+* count number of points on each polygon 
+
+
+## Guide on CDK
 
 The `cdk.json` file tells the CDK Toolkit how to execute your app.
 
